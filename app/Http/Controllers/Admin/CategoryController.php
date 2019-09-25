@@ -32,7 +32,7 @@ class CategoryController extends Controller
 
         $cate             = new Category;
         $cate->name       = $request->txtCateName;
-        $cate->slug_name  = $request->txtFullName;
+        $cate->full_name  = $request->txtFullName;
         $cate->save();
 
         return redirect(route('themdanhmuc'))->with("message","Thêm thành công");
@@ -70,5 +70,24 @@ class CategoryController extends Controller
         $cate->save();
 
         return redirect('admin/danh-muc/sua/'.$id)->with("message","Sửa thành công");
+    }
+
+    public function getDelCate($id)
+    {
+        $count = Category::where('parent_id',$id)->count();
+        if($count == 0)
+        {
+            $cate = Category::find($id);
+            $cate->delete();
+            return redirect('admin/danh-muc/danh-sach')->with('message','xóa thành công');
+        }else{
+            echo "<script type='text/javascript'>
+                alert('Bạn không thể xóa chuyên mục này');
+                window.location ='";
+            echo route('listdanhmuc');
+            echo "'
+            </script>";
+
+        }
     }
 }
